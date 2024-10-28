@@ -1,5 +1,5 @@
 with MyMotorDriver; use MyMotorDriver;
-with MicroBit.MotorDriver; use MicroBit.MotorDriver;
+with MicroBit.Extended; use MicroBit.Extended;
 with Priorities;
 
 package TaskAct is

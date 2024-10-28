@@ -1,6 +1,6 @@
 With Ada.Real_Time; use Ada.Real_Time;
 With MicroBit.Console; use MicroBit.Console;
-with MicroBit.MotorDriver; use MicroBit.MotorDriver; --using the procedures defined here
+with MicroBit.Extended; use MicroBit.Extended; --using the procedures defined here
 with DFR0548;  -- using the types defined here
 use MicroBit; --for pin names
 
@@ -28,7 +28,7 @@ package body TaskAct is
    procedure Setup is
    begin
 
-      MotorDriver.Servo(1,90);
+      Extended.Servo(1,90);
       delay 1.0; -- equivalent of Time.Sleep(1000) = 1 second
 
    end Setup;
@@ -37,26 +37,27 @@ package body TaskAct is
    begin
       case direction is
          when Forward =>
-            MotorDriver.Drive(Forward,(4095,4095,4095,4095));
+            Extended.Drive(Forward,(4095,4095,4095,4095));
          when Backward =>
-            MotorDriver.Drive(Backward,(4095,4095,4095,4095));
+            Extended.Drive(Backward,(4095,4095,4095,4095));
          when Left =>
-            MotorDriver.Drive(Left,(4095,4095,4095,4095));
+            Extended.Drive(Left,(4095,4095,4095,4095));
          when Right =>
-            MotorDriver.Drive(Right,(4095,4095,4095,4095));
+            Extended.Drive(Right,(4095,4095,4095,4095));
          when Forward_Left =>
-            MotorDriver.Drive(Forward_Left,(4095,4095,4095,4095));
+            Extended.Drive(Forward,(0,0,4095,4095));
          when Backward_Left =>
-            MotorDriver.Drive(Backward_Left,(4095,4095,4095,4095));
+            Extended.Drive(Backward_Left,(4095,4095,4095,4095));
          when Turning =>
-            MotorDriver.Drive(Turning,(4095,4095,2000,2000));
+            Extended.Drive(Turning,(4095,4095,2000,2000));
          when Lateral_Left =>
-            MotorDriver.Drive(Lateral_Left,(4095,4095,4095,4095));
+            Extended.Drive(Lateral_Left,(4095,4095,4095,4095));
          when Rotating_Left =>
-            MotorDriver.Drive(Rotating_Left,(4095,4095,4095,4095));
+            Extended.Drive(Rotating_Left,(4095,4095,4095,4095));
          when Stop =>
-            MotorDriver.Drive(Stop,(0,0,0,0));
+            Extended.Drive(Stop,(0,0,0,0));
+         when Spin =>
+            Extended.Drive(Spin,(4095,4095,4095,4095));
       end case;
    end setDrive;
-
 end TaskAct;
