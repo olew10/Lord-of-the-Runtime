@@ -6,13 +6,18 @@ package body TaskThink is
 
   task body think is
    myClock : Time;
+   minDist : constant Distance_cm := 20;
    begin
       loop
          myClock := Clock;
 
          --make a decision (could be wrapped nicely in a procedure)
-         if Brain.GetMeasurementSensor1 > 20 and Brain.GetMeasurementSensor2 > 20 then
+         if Brain.GetMeasurementSensor1 > minDist and Brain.GetMeasurementSensor2 > minDist then
             MotorDriver_custom.SetDirection (Forward); --our decision what to do based on the sensor values
+         elsif Brain.GetMeasurementSensor1 > minDist then
+            MotorDriver_custom.SetDirection (Turn_left);
+         elsif Brain.GetMeasurementSensor2 > minDist then
+            MotorDriver_custom.SetDirection (Turn_Right);
          else
             MotorDriver_custom.SetDirection (Rotating_Left);
          end if;
