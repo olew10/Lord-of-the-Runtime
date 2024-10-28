@@ -4,6 +4,8 @@ with MicroBit.Types; use MicroBit.Types;
 with MicroBit.MotorDriver; use MicroBit.MotorDriver;
 with MicroBit.Ultrasonic;
 use MicroBit;
+With MyBrain; use MyBrain;
+with MyMotorDriver; use MyMotorDriver;
 
 procedure Measure_WCET is
 
