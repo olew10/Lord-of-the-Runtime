@@ -34,8 +34,8 @@ package body TaskSense is
          Put_line ("1: " & Distance_cm'Image(Distance1));
          Put_line ("2: " & Distance_cm'Image(Distance2));
 
-         Brain.SetMeasurementSensor1 (Distance1); -- random value, hook up a sensor here note that you might need to either cast to integer OR -better- change type of Brain.SetMeasurementSensor1
-         Brain.SetMeasurementSensor2 (Distance2); -- random value, hook up another sensor here
+         Brain.SetMeasurementSensor1 (Distance1);
+         Brain.SetMeasurementSensor2 (Distance2);
 
          delay until myClock + Milliseconds(200); --random period
       end loop;

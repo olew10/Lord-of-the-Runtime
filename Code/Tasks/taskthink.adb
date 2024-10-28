@@ -19,7 +19,7 @@ package body TaskThink is
             MotorDriver_custom.SetDirection (Forward);
          elsif Brain.GetMeasurementSensor1 < midDist then
             MotorDriver_custom.SetDirection (Forward);
-         elsif Brain.GetMeasurementSensor2 > midDist then
+         elsif Brain.GetMeasurementSensor2 < midDist then
             MotorDriver_custom.SetDirection (Forward);
          end if;
 
