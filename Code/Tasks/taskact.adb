@@ -49,10 +49,6 @@ package body TaskAct is
          when Backward_Left =>
             MotorDriver.Drive(Backward_Left,(4095,4095,4095,4095));
          when Turning =>
-            MotorDriver.Drive(Turning,(4095,4095,4095,4095));
-         when Turn_left =>
-            MotorDriver.Drive(Turning,(2000,2000,4095,4095));
-         when Turn_Right =>
             MotorDriver.Drive(Turning,(4095,4095,2000,2000));
          when Lateral_Left =>
             MotorDriver.Drive(Lateral_Left,(4095,4095,4095,4095));
