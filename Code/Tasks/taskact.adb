@@ -31,7 +31,7 @@ package body TaskAct is
       MotorDriver.Servo(1,90);
       delay 1.0; -- equivalent of Time.Sleep(1000) = 1 second
 
-   end Setup;        --heihei
+   end Setup;
 
    procedure setDrive (direction : Directions) is
    begin
