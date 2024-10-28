@@ -2,13 +2,13 @@ package body MyMotorDriver is
 
    protected body MotorDriver_custom is
       --  procedures can modify the data
-      procedure SetDirection (V : Directions) is
+      procedure SetDirection (V : customDirections) is
       begin
          DriveDirection := V;
       end SetDirection;
 
       --  functions cannot modify the data
-      function GetDirection return Directions is
+      function GetDirection return customDirections is
       begin
          return DriveDirection;
       end GetDirection;

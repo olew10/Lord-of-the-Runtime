@@ -1,6 +1,6 @@
 With Ada.Real_Time; use Ada.Real_Time;
 With MicroBit.Console; use MicroBit.Console;
-with MicroBit.MotorDriver; use MicroBit.MotorDriver; --using the procedures defined here
+with MicroBit.MotorDriver;
 with DFR0548;  -- using the types defined here
 use MicroBit; --for pin names
 
@@ -29,31 +29,25 @@ package body TaskAct is
    begin
 
       MotorDriver.Servo(1,90);
-      delay 1.0; -- equivalent of Time.Sleep(1000) = 1 second
+      delay 1.0; -- equivalent of Time.Sleep(500) = 1 second
 
    end Setup;
 
-   procedure setDrive (direction : Directions) is
+   procedure setDrive (direction : customDirections) is
    begin
       case direction is
          when Forward =>
             MotorDriver.Drive(Forward,(4095,4095,4095,4095));
+         when Turn_Left =>
+            MotorDriver.Drive(Forward,(500,500,4095,4095));
+         when Turn_Right =>
+            MotorDriver.Drive(Forward,(4095,4095,500,500));
          when Backward =>
             MotorDriver.Drive(Backward,(4095,4095,4095,4095));
-         when Left =>
-            MotorDriver.Drive(Left,(4095,4095,4095,4095));
-         when Right =>
-            MotorDriver.Drive(Right,(4095,4095,4095,4095));
-         when Forward_Left =>
-            MotorDriver.Drive(Forward_Left,(4095,4095,4095,4095));
-         when Backward_Left =>
-            MotorDriver.Drive(Backward_Left,(4095,4095,4095,4095));
-         when Turning =>
-            MotorDriver.Drive(Turning,(4095,4095,2000,2000));
-         when Lateral_Left =>
-            MotorDriver.Drive(Lateral_Left,(4095,4095,4095,4095));
-         when Rotating_Left =>
-            MotorDriver.Drive(Rotating_Left,(4095,4095,4095,4095));
+         when Backward_Turn_Left =>
+            MotorDriver.Drive(Backward,(500,500,4095,4095));
+         when Backward_Turn_Right =>
+            MotorDriver.Drive(Backward,(4095,4095,500,500));
          when Stop =>
             MotorDriver.Drive(Stop,(0,0,0,0));
       end case;

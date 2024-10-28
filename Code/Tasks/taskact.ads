@@ -7,5 +7,5 @@ package TaskAct is
    task Act with Priority=> Priorities.Act;
 
    procedure Setup;
-   procedure setDrive (direction : Directions);
+   procedure setDrive (direction : customDirections);
 end TaskAct;
