@@ -18,11 +18,9 @@ package body TaskThink is
          elsif Brain.GetMeasurementSensor1 > midDist and Brain.GetMeasurementSensor2 > midDist then
             MotorDriver_custom.SetDirection (Forward);
          elsif Brain.GetMeasurementSensor1 < midDist then
-            MotorDriver_custom.SetDirection (Turn_left);
-         elsif Brain.GetMeasurementSensor2 < midDist then
-            MotorDriver_custom.SetDirection (Turn_Right);
-         else
-            MotorDriver_custom.SetDirection (Rotating_Left);
+            MotorDriver_custom.SetDirection (Forward);
+         elsif Brain.GetMeasurementSensor2 > midDist then
+            MotorDriver_custom.SetDirection (Forward);
          end if;
 
          delay until myClock + Milliseconds(100);  --random period
