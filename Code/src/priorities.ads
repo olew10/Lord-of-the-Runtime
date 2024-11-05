@@ -1,4 +1,5 @@
 package Priorities is
+
    Base      : constant := 0;
 
    -- Task priorities
