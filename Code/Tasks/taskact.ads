@@ -11,5 +11,5 @@ package TaskAct is
 
    procedure Setup;
    procedure coreAct;
-   procedure setDrive (direction : Directions);
+   procedure setDrive (direction : Directions;  speed : Speeds := (4095,4095,4095,4095));
 end TaskAct;

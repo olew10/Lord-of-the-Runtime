@@ -26,15 +26,14 @@ package body TaskAct is
       myClock : Ada.Real_Time.Time;
    begin
       myClock := Ada.Real_Time.Clock;
-      setDrive(MotorDriver_custom.GetDirection);
+      setDrive(MotorDriver_custom.GetStatus.Direction,MotorDriver_Custom.GetStatus.Speed);
 
       if debugMode then
-      Put_Line ("Direction is: " & MotorDriver_custom.GetDirection'Image);
+      Put_Line ("Direction is: " & MotorDriver_custom.GetStatus.Direction'Image);
       end if;
 
       delay until myClock + Ada.Real_Time.Milliseconds(50);
    end coreAct;
-
 
    procedure Setup is
    begin
@@ -42,31 +41,31 @@ package body TaskAct is
       delay 1.0;
    end Setup;
 
-   procedure setDrive(direction : Directions) is
+   procedure setDrive(direction : Directions;  speed : Speeds := (4095,4095,4095,4095)) is
    begin
       case direction is
          when Forward =>
-            Extended.Drive(Forward, (4095, 4095, 4095, 4095));
+            Extended.Drive(Forward, (speed));
          when Backward =>
-            Extended.Drive(Backward, (4095, 4095, 4095, 4095));
+            Extended.Drive(Backward, (speed));
          when Left =>
-            Extended.Drive(Left, (4095, 4095, 4095, 4095));
+            Extended.Drive(Left, (speed));
          when Right =>
-            Extended.Drive(Right, (4095, 4095, 4095, 4095));
+            Extended.Drive(Right, (speed));
          when Forward_Left =>
-            Extended.Drive(Forward, (0, 0, 4095, 4095));
+            Extended.Drive(Forward, (speed));
          when Backward_Left =>
-            Extended.Drive(Backward_Left, (4095, 4095, 4095, 4095));
+            Extended.Drive(Backward_Left, (speed));
          when Turning =>
-            Extended.Drive(Turning, (4095, 4095, 2000, 2000));
+            Extended.Drive(Turning, (speed));
          when Lateral_Left =>
-            Extended.Drive(Lateral_Left, (4095, 4095, 4095, 4095));
+            Extended.Drive(Lateral_Left, (speed));
          when Rotating_Left =>
-            Extended.Drive(Rotating_Left, (4095, 4095, 4095, 4095));
+            Extended.Drive(Rotating_Left, (speed));
          when Stop =>
             Extended.Drive(Stop, (0, 0, 0, 0));
          when Spin =>
-            Extended.Drive(Spin, (4095, 4095, 4095, 4095));
+            Extended.Drive(Spin, (speed));
       end case;
    end setDrive;
 

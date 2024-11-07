@@ -1,16 +1,22 @@
-with MicroBit.Extended; use MicroBit.Extended; --using the procedures defined here
-with DFR0548;  -- using the types defined here
-with MicroBit.Console; use MicroBit.Console; -- for serial port communication
-use MicroBit; --for pin names
+with MicroBit.Extended; use MicroBit.Extended;
+with DFR0548;
+with MicroBit.Console; use MicroBit.Console;
+use MicroBit;
 
 package MyMotorDriver is
+   type Status is record
+      Direction : Directions;
+      Speed     : Speeds;
+   end record;
 
-   protected MotorDriver_custom is
-      function GetDirection return Directions; -- concurrent read operations are now possible
-      procedure SetDirection (V : Directions); -- but concurrent read/write are not!
+   protected MotorDriver_Custom is
+      procedure SetDirection (V : Directions; S : Speeds);
+      function GetStatus return Status;
 
    private
-      DriveDirection : Directions := Stop;
-   end MotorDriver_custom;
+      -- Declare the variables here so they are accessible in the body
+      DriveDirection : Directions;
+      DriveSpeed     : Speeds;
+   end MotorDriver_Custom;
 
 end MyMotorDriver;
