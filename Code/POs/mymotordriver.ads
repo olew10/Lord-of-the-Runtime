@@ -14,7 +14,6 @@ package MyMotorDriver is
       function GetStatus return Status;
 
    private
-      -- Declare the variables here so they are accessible in the body
       DriveDirection : Directions;
       DriveSpeed     : Speeds;
    end MotorDriver_Custom;

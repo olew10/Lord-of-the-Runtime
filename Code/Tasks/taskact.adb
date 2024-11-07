@@ -64,8 +64,10 @@ package body TaskAct is
             Extended.Drive(Rotating_Left, (speed));
          when Stop =>
             Extended.Drive(Stop, (0, 0, 0, 0));
-         when Spin =>
-            Extended.Drive(Spin, (speed));
+         when Left_Rotate  =>
+            Extended.Drive(Left_Rotate, (speed));
+         when Right_Rotate  =>
+            Extended.Drive(Right_Rotate, (speed));
       end case;
    end setDrive;
 

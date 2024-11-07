@@ -13,7 +13,8 @@ package MicroBit.Extended is
                        Lateral_Left,
                        Rotating_Left,
                        Stop,
-                       Spin);
+                       Left_Rotate,
+                       Right_Rotate);
 
    type Speeds is record
       rf: UInt12;

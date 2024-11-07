@@ -72,11 +72,16 @@ package body MicroBit.Extended is
                          rb => (0, 0),
                          lf => (0, 0),
                          lb => (0, 0));
-         when Spin =>
+         when Right_Rotate =>
             Drive_Wheels(rf => (Speed.rf, 0),
                          rb => (Speed.rb, 0),
                          lf => (0, Speed.lf),
                          lb => (0, Speed.lb));
+          when Left_Rotate =>
+            Drive_Wheels(rf => (0, Speed.rf),
+                         rb => (0, Speed.rf),
+                         lf => (Speed.lf, 0),
+                         lb => (Speed.lb, 0));
       end case;
    end Drive;
 
