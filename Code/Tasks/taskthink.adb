@@ -1,108 +1,97 @@
+with Ada.Execution_Time; use Ada.Execution_Time;
+with Ada.Real_Time; use Ada.Real_Time;
+with MicroBit.Console; use MicroBit.Console;
+with Profiler;
+with Config; use Config;
+
 package body TaskThink is
 
-   -- Constants for movement and speed
-   Max_Distance     : constant Distance_cm := 100;
-   Min_Distance     : constant Distance_cm := 20;
-   Min_Speed_Factor : constant Float := 0.1;
-   Max_Speed_Factor : constant Float := 1.0;
-
-   -- Variables for direction and stability counter
-   lastTurnDirection : Directions;
-   stableCounter     : Integer := 0;
-
-   function checkDistance(Sensor1, Sensor2 : Distance_cm; Min_Dist : Distance_cm) return Boolean is
+   function checkDistance(sensor1, sensor2 : Distance_cm; minDist : Distance_cm) return Boolean is
    begin
-      return (Sensor1 < Min_Dist or else Sensor2 < Min_Dist);
+      return (sensor1 < minDist or else sensor2 < minDist);
    end checkDistance;
 
-   function Min(A, B : Distance_cm) return Distance_cm is
+   function min(a, b : Distance_cm) return Distance_cm is
    begin
-      return (if A < B then A else B);
-   end Min;
+      if a < b then
+         return a;
+      else
+         return b;
+      end if;
+   end min;
 
-   function whichSensor(Left_Sensor, Right_Sensor, Min_Distance : Distance_cm) return Directions is
-begin
-   if Left_Sensor < Min_Distance and Right_Sensor < Min_Distance then
-      return Left_Rotate;
-   elsif Left_Sensor < Min_Distance then
-      return Left_Rotate;
-   elsif Right_Sensor < Min_Distance then
-      return Right_Rotate;
-   else
-      return Forward;
-   end if;
-end whichSensor;
+   function whichSensor(leftSensor, rightSensor, minDistance : Distance_cm) return Directions is
+   begin
+      if leftSensor < minDistance and rightSensor < minDistance then
+         return Left_Rotate;
+      elsif leftSensor < minDistance then
+         return Left_Rotate;
+      elsif rightSensor < minDistance then
+         return Right_Rotate;
+      else
+         return Forward;
+      end if;
+   end whichSensor;
 
-   function CalculateMotorSpeed(closest_distance : Distance_cm) return HAL.UInt12 is
+   function calculateMotorSpeed(closestDistance : Distance_cm) return Hal.UInt12 is
       speedFactor : Float;
-      motorSpeed : HAL.UInt12;
+      motorSpeed  : Hal.UInt12;
    begin
-      if closest_distance < Max_Distance then
-         speedFactor := Float(closest_distance) / Float(Max_Distance);
-         if speedFactor < Min_Speed_Factor then
-            speedFactor := Min_Speed_Factor;
-         elsif speedFactor > Max_Speed_Factor then
-            speedFactor := Max_Speed_Factor;
+      if closestDistance < maxDistance then
+         speedFactor := Float(closestDistance) / Float(maxDistance);
+         if speedFactor < minSpeedFactor then
+            speedFactor := minSpeedFactor;
+         elsif speedFactor > maxSpeedFactor then
+            speedFactor := maxSpeedFactor;
          end if;
-         motorSpeed := HAL.UInt12(Integer(4095.0 * speedFactor));
+         motorSpeed := Hal.UInt12(Integer(4095.0 * speedFactor));
       else
          motorSpeed := 4095;
       end if;
       return motorSpeed;
-   end CalculateMotorSpeed;
+   end calculateMotorSpeed;
 
-   procedure UpdateMotorDirection(turningDirection : Directions; motorSpeed : HAL.UInt12) is
+   procedure updateMotorDirection(turningDirection : Directions; motorSpeed : Hal.UInt12) is
    begin
       MotorDriver_Custom.SetDirection(turningDirection, (motorSpeed, motorSpeed, motorSpeed, motorSpeed));
-   end UpdateMotorDirection;
+   end updateMotorDirection;
 
-   procedure MoveForward(closest_distance : Distance_cm) is
-      motorSpeed : HAL.UInt12;
+   procedure moveForward(closestDistance : Distance_cm) is
+      motorSpeed : Hal.UInt12;
    begin
-      motorSpeed := CalculateMotorSpeed(closest_distance);
+      motorSpeed := calculateMotorSpeed(closestDistance);
       MotorDriver_Custom.SetDirection(Forward, (motorSpeed, motorSpeed, motorSpeed, motorSpeed));
-   end MoveForward;
+   end moveForward;
 
-   procedure ReadSensorValues(leftDistance : out Distance_cm; rightDistance : out Distance_cm) is
+   procedure readSensorValues(leftDistance : out Distance_cm; rightDistance : out Distance_cm) is
    begin
       leftDistance  := Brain.leftGetMeasurementSensor;
       rightDistance := Brain.rightGetMeasurementSensor;
-   end ReadSensorValues;
+   end readSensorValues;
 
    procedure coreThink is
-      myClock : Time := Clock;
-      leftDistance, rightDistance : Distance_cm;
+      myClock          : Time := Clock;
       turningDirection : Directions;
-      closest_distance : Distance_cm;
+      leftDistance     : Distance_cm;
+      rightDistance    : Distance_cm;
+      closestDistance  : Distance_cm;
    begin
-      ReadSensorValues(leftDistance, rightDistance);
-      turningDirection := whichSensor(leftDistance, rightDistance, Min_Distance);
+      readSensorValues(leftDistance, rightDistance);
+      turningDirection := whichSensor(leftDistance, rightDistance, minDistance);
 
-      if checkDistance(leftDistance, rightDistance, Min_Distance) then
-
-         if turningDirection /= lastTurnDirection then
-            stableCounter := stableCounter + 1;
-         else
-            stableCounter := 0;
-         end if;
-
-         if stableCounter >= 3 then
-            lastTurnDirection := turningDirection;
-            stableCounter := 0;
-         end if;
-         UpdateMotorDirection(lastTurnDirection, 4095);
+      if checkDistance(leftDistance, rightDistance, minDistance) then
+         updateMotorDirection(turningDirection, 4095);
       else
-         closest_distance := Min(leftDistance, rightDistance);
-         MoveForward(closest_distance);
+         closestDistance := min(leftDistance, rightDistance);
+         moveForward(closestDistance);
       end if;
-
       delay until myClock + Milliseconds(100);
    end coreThink;
 
    task body think is
    begin
       loop
-         if debugMode then
+         if profilerMode then
             Profiler.Timer("Think", 10, coreThink'Access);
          else
             coreThink;

@@ -1,11 +1,6 @@
-with Ada.Execution_Time; use Ada.Execution_Time;
-with Ada.Real_Time; use Ada.Real_Time;
 with MicroBit.Types; use MicroBit.Types;
 with MicroBit.Extended; use MicroBit.Extended;
-with MicroBit.Console; use MicroBit.Console;
 with HAL;
-with Profiler;
-with Config; use Config;
 
 with MyMotorDriver; use MyMotorDriver;
 with MyBrain; use MyBrain;
@@ -16,10 +11,47 @@ package TaskThink is
 
    task Think with Priority=> Priorities.Think;
 
+   maxDistance     : constant Distance_cm := 100;
+   minDistance     : constant Distance_cm := 10;
+   minSpeedFactor  : constant Float := 0.1;
+   maxSpeedFactor  : constant Float := 1.0;
+   turningDistance : constant Distance_cm := 30;
+
+   function checkDistance(
+      sensor1  : Distance_cm;
+      sensor2  : Distance_cm;
+      minDist  : Distance_cm
+   ) return Boolean;
+
+   function min(
+      a        : Distance_cm;
+      b        : Distance_cm
+   ) return Distance_cm;
+
+   function whichSensor(
+      leftSensor   : Distance_cm;
+      rightSensor  : Distance_cm;
+      minDistance  : Distance_cm
+   ) return Directions;
+
+   function calculateMotorSpeed(
+      closestDistance  : Distance_cm
+   ) return HAL.UInt12;
+
+   procedure updateMotorDirection(
+      turningDirection : Directions;
+      motorSpeed       : HAL.UInt12
+   );
+
+   procedure moveForward(
+      closestDistance  : Distance_cm
+   );
+
+   procedure readSensorValues(
+      leftDistance  : out Distance_cm;
+      rightDistance : out Distance_cm
+   );
+
    procedure coreThink;
-   procedure UpdateMotorDirection(turningDirection : Directions; motorSpeed : HAL.UInt12);
-   function whichSensor(Left_Sensor, Right_Sensor, Min_Distance : Distance_cm) return Directions;
-   function CalculateMotorSpeed(closest_distance : Distance_cm) return HAL.UInt12;
-   procedure ReadSensorValues(leftDistance : out Distance_cm; rightDistance : out Distance_cm);
 
 end TaskThink;

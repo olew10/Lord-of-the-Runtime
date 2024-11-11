@@ -17,7 +17,7 @@ package body TaskSense is
     task body sense is
     begin
         loop
-            if debugMode then
+            if profilerMode then
                 Profiler.Timer("Sense", 10, coreSense'Access);
             else
                 coreSense;
@@ -25,14 +25,25 @@ package body TaskSense is
         end loop;
     end sense;
 
-      function Average_Buffer(Buffer : Distance_Buffer) return Distance_cm is
-         Sum : Natural := 0;
-      begin
-         for I in Buffer'Range loop
-               Sum := Sum + Natural(Buffer(I));
-         end loop;
-         return Distance_cm(Sum / Natural(Buffer'Length));
-      end Average_Buffer;
+    function averageBuffer(Buffer : Distance_Buffer) return Distance_cm is
+        Sum : Natural := 0;
+    begin
+        for I in Buffer'Range loop
+            Sum := Sum + Natural(Buffer(I));
+        end loop;
+        return Distance_cm(Sum / Natural(Buffer'Length));
+    end averageBuffer;
+
+    procedure updateBuffer(SensorBuffer : in out Distance_Buffer;
+                           Index : in out Integer;
+                           NewDistance : in Distance_cm) is
+    begin
+        SensorBuffer(Index) := NewDistance;
+        Index := Index + 1;
+        if Index > Distance_Buffer'Last then
+            Index := Distance_Buffer'First;
+        end if;
+    end UpdateBuffer;
 
     procedure coreSense is
         package leftSensorPackage is new Ultrasonic(MB_P16, MB_P0);
@@ -41,36 +52,24 @@ package body TaskSense is
         leftDistance : Distance_cm := 0;
         rightDistance : Distance_cm := 0;
         myClock : Time;
-
     begin
         myClock := Clock;
 
         leftDistance := leftSensorPackage.Read;
         rightDistance := rightSensorPackage.Read;
 
-        leftSensorBuffer(leftIndex) := leftDistance;
-        leftIndex := leftIndex + 1;
-        if leftIndex > 5 then
-            leftIndex := 1;
-        end if;
-
-
-        rightSensorBuffer(rightIndex) := rightDistance;
-        rightIndex := rightIndex + 1;
-        if rightIndex > 5 then
-            rightIndex := 1;
-        end if;
-
-        leftDistance := Average_Buffer(leftSensorBuffer);
-        rightDistance := Average_Buffer(rightSensorBuffer);
+        updateBuffer(leftSensorBuffer, leftIndex, leftDistance);
+        updateBuffer(rightSensorBuffer, rightIndex, rightDistance);
 
         if debugMode then
+            Put_Line("Raw Left Distance: " & Distance_cm'Image(leftSensorPackage.Read));
             Put_Line("Smoothed Left Distance: " & Distance_cm'Image(leftDistance));
+            Put_Line("Raw Right Distance: " & Distance_cm'Image(rightSensorPackage.Read));
             Put_Line("Smoothed Right Distance: " & Distance_cm'Image(rightDistance));
         end if;
 
-        Brain.leftSetMeasurementSensor(leftDistance);
-        Brain.rightSetMeasurementSensor(rightDistance);
+        Brain.leftSetMeasurementSensor(averageBuffer(leftSensorBuffer));
+        Brain.rightSetMeasurementSensor(averageBuffer(rightSensorBuffer));
 
         delay until myClock + Milliseconds(60);
     end coreSense;
