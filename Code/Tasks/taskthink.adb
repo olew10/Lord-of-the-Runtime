@@ -44,9 +44,9 @@ package body TaskThink is
          elsif speedFactor > maxSpeedFactor then
             speedFactor := maxSpeedFactor;
          end if;
-         motorSpeed := Hal.UInt12(Integer(4095.0 * speedFactor));
+         motorSpeed := Hal.UInt12(maxSpeed * speedFactor);
       else
-         motorSpeed := 4095;
+         motorSpeed := Hal.UInt12(maxSpeed);
       end if;
       return motorSpeed;
    end calculateMotorSpeed;
@@ -80,7 +80,7 @@ package body TaskThink is
       turningDirection := whichSensor(leftDistance, rightDistance, minDistance);
 
       if checkDistance(leftDistance, rightDistance, minDistance) then
-         updateMotorDirection(turningDirection, 4095);
+         updateMotorDirection(turningDirection, Hal.UInt12(maxSpeed));
       else
          closestDistance := min(leftDistance, rightDistance);
          moveForward(closestDistance);

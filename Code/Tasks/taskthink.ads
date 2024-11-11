@@ -13,9 +13,10 @@ package TaskThink is
 
    maxDistance     : constant Distance_cm := 100;
    minDistance     : constant Distance_cm := 10;
-   minSpeedFactor  : constant Float := 0.1;
+   minSpeedFactor  : constant Float := 0.2;
    maxSpeedFactor  : constant Float := 1.0;
    turningDistance : constant Distance_cm := 30;
+   maxSpeed : constant Float := 2050.0;
 
    function checkDistance(
       sensor1  : Distance_cm;
