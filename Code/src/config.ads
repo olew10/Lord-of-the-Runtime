@@ -1,4 +1,4 @@
 package Config is
-   debugMode : constant Boolean := False;
-   profilerMode : constant Boolean := False;
+   debugMode : constant Boolean := True;
+   profilerMode : constant Boolean := True;
 end Config;

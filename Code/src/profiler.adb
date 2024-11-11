@@ -8,7 +8,7 @@ use MicroBit;
 
 package body Profiler is
 
-   procedure Timer (Navn : String; Measurements, taskDelay : Integer; codeExecute : access procedure) is
+   procedure Timer (Navn : String; Measurements : Integer; taskDelay : Time_Span; codeExecute : access procedure) is
       Time_Now   : Time;
       Elapsed    : Time_Span := Ada.Real_Time.Time_Span_Zero;
       Max_Time   : Time_Span := Ada.Real_Time.Time_Span_Zero;
@@ -26,7 +26,7 @@ package body Profiler is
             end if;
          end;
 
-            delay until Time_Now + Milliseconds(taskDelay);
+            delay until Time_Now + taskDelay;
 
       end loop;
 

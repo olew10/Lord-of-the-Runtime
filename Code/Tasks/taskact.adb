@@ -1,6 +1,7 @@
 with MicroBit.Console; use MicroBit.Console;
 with MicroBit.Extended; use MicroBit.Extended;
 with MicroBit.Types; use MicroBit.Types;
+
 with Config; use Config;
 with DFR0548;
 use MicroBit;
@@ -9,16 +10,11 @@ with Profiler;
 package body taskAct is
 
    procedure coreAct is
-      myClock : Time;
    begin
-      myClock := clock;
       setDrive(motorDriver_Custom.getStatus.direction, motorDriver_Custom.getStatus.speed);
-
       if debugMode then
          put_Line("Direction is: " & motorDriver_Custom.getStatus.direction'Image);
       end if;
-
-      delay until myClock + milliseconds(50);
    end coreAct;
 
    procedure setup is
@@ -58,13 +54,15 @@ package body taskAct is
    end setDrive;
 
    task body act is
+   myClock : Time := Clock;
    begin
       setup;
       loop
          if profilerMode then
-            profiler.timer("Act", 100, 50, coreAct'Access);
+            profiler.timer("Act", 100, deadline, coreAct'Access);
          else
             coreAct;
+            delay until myClock + deadline;
          end if;
       end loop;
    end act;

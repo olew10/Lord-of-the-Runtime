@@ -15,12 +15,11 @@ package body TaskSense is
     rightIndex : Integer := 1;
 
     task body sense is
+   myClock : Time := Clock;
     begin
-      myClock : Time;
         loop
-             myClock := Clock;
             if profilerMode then
-                Profiler.Timer("Sense", 100, 100, coreSense'Access);
+                Profiler.Timer("Sense", 100, deadline, coreSense'Access);
             else
                 coreSense;
                  delay until myClock + deadline;

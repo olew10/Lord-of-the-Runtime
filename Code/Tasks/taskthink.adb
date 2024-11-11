@@ -87,15 +87,14 @@ package body TaskThink is
          closestDistance := min(leftDistance, rightDistance);
          moveForward(closestDistance);
       end if;
-      delay until myClock + Milliseconds(100);
    end coreThink;
 
    task body think is
+   myClock : Time := Clock;
    begin
-    myClock          : Time := Clock;
       loop
          if profilerMode then
-            Profiler.Timer("Think", 100, 100, coreThink'Access);
+            Profiler.Timer("Think", 100, deadline, coreThink'Access);
          else
             coreThink;
             delay until myClock + deadline;
