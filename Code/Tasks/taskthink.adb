@@ -1,5 +1,3 @@
-with Ada.Execution_Time; use Ada.Execution_Time;
-with Ada.Real_Time; use Ada.Real_Time;
 with MicroBit.Console; use MicroBit.Console;
 with Profiler;
 with Config; use Config;
@@ -85,7 +83,7 @@ package body TaskThink is
          closestDistance := min(leftDistance, rightDistance);
          moveForward(closestDistance);
       end if;
-      delay until myClock + Milliseconds(100);
+      delay until myClock + deadline;
    end coreThink;
 
    task body think is

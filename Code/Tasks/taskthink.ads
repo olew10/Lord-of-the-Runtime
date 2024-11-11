@@ -1,7 +1,7 @@
 with MicroBit.Types; use MicroBit.Types;
 with MicroBit.Extended; use MicroBit.Extended;
 with HAL;
-
+with Ada.Real_Time; use Ada.Real_Time;
 with MyMotorDriver; use MyMotorDriver;
 with MyBrain; use MyBrain;
 with Priorities;
@@ -17,6 +17,8 @@ package TaskThink is
    maxSpeedFactor  : constant Float := 1.0;
    turningDistance : constant Distance_cm := 30;
    maxSpeed : constant Float := 2050.0;
+
+   deadline : constant Time_Span := Milliseconds(135);
 
    function checkDistance(
       sensor1  : Distance_cm;

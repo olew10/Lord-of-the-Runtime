@@ -71,7 +71,7 @@ package body TaskSense is
         Brain.leftSetMeasurementSensor(averageBuffer(leftSensorBuffer));
         Brain.rightSetMeasurementSensor(averageBuffer(rightSensorBuffer));
 
-        delay until myClock + Milliseconds(60);
+        delay until myClock + deadline;
     end coreSense;
 
 end TaskSense;

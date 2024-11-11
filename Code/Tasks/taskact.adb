@@ -1,5 +1,3 @@
-with Ada.Real_Time; use Ada.Real_Time;
-with Ada.Execution_Time; use Ada.Execution_Time;
 with MicroBit.Console; use MicroBit.Console;
 with MicroBit.Extended; use MicroBit.Extended;
 with MicroBit.Types; use MicroBit.Types;
@@ -20,7 +18,7 @@ package body taskAct is
          put_Line("Direction is: " & motorDriver_Custom.getStatus.direction'Image);
       end if;
 
-      delay until myClock + milliseconds(50);
+      delay until myClock + deadline;
    end coreAct;
 
    procedure setup is
