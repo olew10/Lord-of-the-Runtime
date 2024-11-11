@@ -18,7 +18,7 @@ package TaskThink is
    maxSpeed : constant Integer := 4095;
    minSpeed : constant Integer := 1024;
 
-   deadline : constant Time_Span := Milliseconds(135);
+   deadline : constant Time_Span := Priorities.thinkDeadline;
 
    function checkDistance(
       sensor1  : Distance_cm;

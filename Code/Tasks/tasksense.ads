@@ -7,7 +7,7 @@ package TaskSense is
 
    task Sense with Priority => Priorities.Sense;
 
-   deadline : constant Time_Span := Milliseconds(65);
+   deadline : constant Time_Span := Priorities.senseDeadline;
 
    type Distance_Buffer is array (1 .. 5) of Distance_cm;
    function AverageBuffer(Buffer : Distance_Buffer) return Distance_cm;

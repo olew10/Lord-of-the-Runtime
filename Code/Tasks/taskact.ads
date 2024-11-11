@@ -8,7 +8,7 @@ package TaskAct is
 
    task Act with Priority=> Priorities.Act;
 
-   deadline : constant Time_Span := Milliseconds(75);
+   deadline : Time_Span := Priorities.actDeadline;
 
    procedure Setup;
    procedure coreAct;
