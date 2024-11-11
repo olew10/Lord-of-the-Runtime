@@ -6,12 +6,18 @@ use MicroBit;
 with Profiler;
 with Config; use Config;
 
+
 package body TaskSense is
+
+    leftSensorBuffer : Distance_Buffer := (others => 0);
+    rightSensorBuffer : Distance_Buffer := (others => 0);
+    leftIndex : Integer := 1;
+    rightIndex : Integer := 1;
 
     task body sense is
     begin
         loop
-            if debugMode then
+            if profilerMode then
                 Profiler.Timer("Sense", 10, coreSense'Access);
             else
                 coreSense;
@@ -19,9 +25,29 @@ package body TaskSense is
         end loop;
     end sense;
 
+    function averageBuffer(Buffer : Distance_Buffer) return Distance_cm is
+        Sum : Natural := 0;
+    begin
+        for I in Buffer'Range loop
+            Sum := Sum + Natural(Buffer(I));
+        end loop;
+        return Distance_cm(Sum / Natural(Buffer'Length));
+    end averageBuffer;
+
+    procedure updateBuffer(SensorBuffer : in out Distance_Buffer;
+                           Index : in out Integer;
+                           NewDistance : in Distance_cm) is
+    begin
+        SensorBuffer(Index) := NewDistance;
+        Index := Index + 1;
+        if Index > Distance_Buffer'Last then
+            Index := Distance_Buffer'First;
+        end if;
+    end UpdateBuffer;
+
     procedure coreSense is
-        package sensor1 is new Ultrasonic(MB_P16, MB_P0);
-        package sensor2 is new Ultrasonic(MB_P15, MB_P1);
+        package leftSensorPackage is new Ultrasonic(MB_P16, MB_P0);
+        package rightSensorPackage is new Ultrasonic(MB_P15, MB_P1);
 
         leftDistance : Distance_cm := 0;
         rightDistance : Distance_cm := 0;
@@ -29,18 +55,23 @@ package body TaskSense is
     begin
         myClock := Clock;
 
-        leftDistance := sensor1.Read;
-        rightDistance := sensor2.Read;
+        leftDistance := leftSensorPackage.Read;
+        rightDistance := rightSensorPackage.Read;
+
+        updateBuffer(leftSensorBuffer, leftIndex, leftDistance);
+        updateBuffer(rightSensorBuffer, rightIndex, rightDistance);
 
         if debugMode then
-            Put_Line("Left Distance: " & Distance_cm'Image(leftDistance));
-            Put_Line("Right Distance: " & Distance_cm'Image(rightDistance));
+            Put_Line("Raw Left Distance: " & Distance_cm'Image(leftSensorPackage.Read));
+            Put_Line("Smoothed Left Distance: " & Distance_cm'Image(leftDistance));
+            Put_Line("Raw Right Distance: " & Distance_cm'Image(rightSensorPackage.Read));
+            Put_Line("Smoothed Right Distance: " & Distance_cm'Image(rightDistance));
         end if;
 
-        Brain.SetMeasurementSensor1(leftDistance);
-        Brain.SetMeasurementSensor2(rightDistance);
+        Brain.leftSetMeasurementSensor(averageBuffer(leftSensorBuffer));
+        Brain.rightSetMeasurementSensor(averageBuffer(rightSensorBuffer));
 
-        delay until myClock + Milliseconds(200);
+        delay until myClock + Milliseconds(60);
     end coreSense;
 
 end TaskSense;

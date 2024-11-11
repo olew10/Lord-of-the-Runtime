@@ -8,66 +8,67 @@ with DFR0548;
 use MicroBit;
 with Profiler;
 
-package body TaskAct is
-
-      task body act is
-   begin
-      Setup;
-      loop
-      if debugMode then
-        Profiler.Timer("Act",10, coreAct'Access);
-      else
-        coreAct;
-      end if;
-      end loop;
-   end act;
+package body taskAct is
 
    procedure coreAct is
-      myClock : Ada.Real_Time.Time;
+      myClock : Time;
    begin
-      myClock := Ada.Real_Time.Clock;
-      setDrive(MotorDriver_custom.GetDirection);
+      myClock := clock;
+      setDrive(motorDriver_Custom.getStatus.direction, motorDriver_Custom.getStatus.speed);
 
       if debugMode then
-      Put_Line ("Direction is: " & MotorDriver_custom.GetDirection'Image);
+         put_Line("Direction is: " & motorDriver_Custom.getStatus.direction'Image);
       end if;
 
-      delay until myClock + Ada.Real_Time.Milliseconds(50);
+      delay until myClock + milliseconds(50);
    end coreAct;
 
-
-   procedure Setup is
+   procedure setup is
    begin
-      Extended.Servo(1, 90);
+      servo(1,90);
       delay 1.0;
-   end Setup;
+   end setup;
 
-   procedure setDrive(direction : Directions) is
+   procedure setDrive(direction : directions; speed : speeds := (4095, 4095, 4095, 4095)) is
    begin
       case direction is
          when Forward =>
-            Extended.Drive(Forward, (4095, 4095, 4095, 4095));
+            drive(Forward, (speed));
          when Backward =>
-            Extended.Drive(Backward, (4095, 4095, 4095, 4095));
+            drive(Backward, (speed));
          when Left =>
-            Extended.Drive(Left, (4095, 4095, 4095, 4095));
+            drive(Left, (speed));
          when Right =>
-            Extended.Drive(Right, (4095, 4095, 4095, 4095));
+            drive(Right, (speed));
          when Forward_Left =>
-            Extended.Drive(Forward, (0, 0, 4095, 4095));
+            drive(Forward_Left, (speed));
          when Backward_Left =>
-            Extended.Drive(Backward_Left, (4095, 4095, 4095, 4095));
+            drive(Backward_Left, (speed));
          when Turning =>
-            Extended.Drive(Turning, (4095, 4095, 2000, 2000));
+            drive(Turning, (speed));
          when Lateral_Left =>
-            Extended.Drive(Lateral_Left, (4095, 4095, 4095, 4095));
+            drive(Lateral_Left, (speed));
          when Rotating_Left =>
-            Extended.Drive(Rotating_Left, (4095, 4095, 4095, 4095));
+            drive(Rotating_Left, (speed));
          when Stop =>
-            Extended.Drive(Stop, (0, 0, 0, 0));
-         when Spin =>
-            Extended.Drive(Spin, (4095, 4095, 4095, 4095));
+            drive(Stop, (0, 0, 0, 0));
+         when Left_Rotate =>
+            drive(Left_Rotate, (speed));
+         when Right_Rotate =>
+            drive(Right_Rotate, (speed));
       end case;
    end setDrive;
 
-end TaskAct;
+   task body act is
+   begin
+      setup;
+      loop
+         if profilerMode then
+            profiler.timer("Act", 10, coreAct'Access);
+         else
+            coreAct;
+         end if;
+      end loop;
+   end act;
+
+end taskAct;
