@@ -18,7 +18,7 @@ package body taskAct is
          put_Line("Direction is: " & motorDriver_Custom.getStatus.direction'Image);
       end if;
 
-      delay until myClock + deadline;
+      delay until myClock + milliseconds(50);
    end coreAct;
 
    procedure setup is
@@ -62,7 +62,7 @@ package body taskAct is
       setup;
       loop
          if profilerMode then
-            profiler.timer("Act", 10, coreAct'Access);
+            profiler.timer("Act", 100, 50, coreAct'Access);
          else
             coreAct;
          end if;

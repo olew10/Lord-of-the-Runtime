@@ -16,11 +16,14 @@ package body TaskSense is
 
     task body sense is
     begin
+      myClock : Time;
         loop
+             myClock := Clock;
             if profilerMode then
-                Profiler.Timer("Sense", 10, coreSense'Access);
+                Profiler.Timer("Sense", 100, 100, coreSense'Access);
             else
                 coreSense;
+                 delay until myClock + deadline;
             end if;
         end loop;
     end sense;
@@ -51,9 +54,7 @@ package body TaskSense is
 
         leftDistance : Distance_cm := 0;
         rightDistance : Distance_cm := 0;
-        myClock : Time;
     begin
-        myClock := Clock;
 
         leftDistance := leftSensorPackage.Read;
         rightDistance := rightSensorPackage.Read;
@@ -70,8 +71,6 @@ package body TaskSense is
 
         Brain.leftSetMeasurementSensor(averageBuffer(leftSensorBuffer));
         Brain.rightSetMeasurementSensor(averageBuffer(rightSensorBuffer));
-
-        delay until myClock + deadline;
     end coreSense;
 
 end TaskSense;

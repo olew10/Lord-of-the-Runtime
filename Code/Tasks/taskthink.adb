@@ -73,7 +73,6 @@ package body TaskThink is
    end readSensorValues;
 
    procedure coreThink is
-      myClock          : Time := Clock;
       turningDirection : Directions;
       leftDistance     : Distance_cm;
       rightDistance    : Distance_cm;
@@ -88,16 +87,18 @@ package body TaskThink is
          closestDistance := min(leftDistance, rightDistance);
          moveForward(closestDistance);
       end if;
-      delay until myClock + deadline;
+      delay until myClock + Milliseconds(100);
    end coreThink;
 
    task body think is
    begin
+    myClock          : Time := Clock;
       loop
          if profilerMode then
-            Profiler.Timer("Think", 10, coreThink'Access);
+            Profiler.Timer("Think", 100, 100, coreThink'Access);
          else
             coreThink;
+            delay until myClock + deadline;
          end if;
       end loop;
    end think;

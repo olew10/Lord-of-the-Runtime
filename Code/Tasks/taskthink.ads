@@ -11,11 +11,10 @@ package TaskThink is
 
    task Think with Priority=> Priorities.Think;
 
-   maxDistance     : constant Distance_cm := 200;
+   maxDistance     : constant Distance_cm := 100;
    minDistance     : constant Distance_cm := 20;
    minSpeedFactor  : constant Float := 0.1;
    maxSpeedFactor  : constant Float := 1.0;
-   turningDistance : constant Distance_cm := 30;
    maxSpeed : constant Integer := 4095;
    minSpeed : constant Integer := 1024;
 
