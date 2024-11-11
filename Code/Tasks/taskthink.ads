@@ -11,12 +11,13 @@ package TaskThink is
 
    task Think with Priority=> Priorities.Think;
 
-   maxDistance     : constant Distance_cm := 100;
-   minDistance     : constant Distance_cm := 10;
-   minSpeedFactor  : constant Float := 0.2;
+   maxDistance     : constant Distance_cm := 200;
+   minDistance     : constant Distance_cm := 20;
+   minSpeedFactor  : constant Float := 0.1;
    maxSpeedFactor  : constant Float := 1.0;
    turningDistance : constant Distance_cm := 30;
-   maxSpeed : constant Float := 2050.0;
+   maxSpeed : constant Integer := 4095;
+   minSpeed : constant Integer := 1024;
 
    deadline : constant Time_Span := Milliseconds(135);
 
@@ -39,11 +40,11 @@ package TaskThink is
 
    function calculateMotorSpeed(
       closestDistance  : Distance_cm
-   ) return HAL.UInt12;
+   ) return Integer;
 
    procedure updateMotorDirection(
       turningDirection : Directions;
-      motorSpeed       : HAL.UInt12
+      motorSpeed       : Integer
    );
 
    procedure moveForward(
