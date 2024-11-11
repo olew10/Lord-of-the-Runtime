@@ -33,34 +33,39 @@ package body TaskThink is
       end if;
    end whichSensor;
 
-   function calculateMotorSpeed(closestDistance : Distance_cm) return Hal.UInt12 is
+   function calculateMotorSpeed(closestDistance : Distance_cm) return Integer is
       speedFactor : Float;
-      motorSpeed  : Hal.UInt12;
+      motorSpeed  : Integer;
    begin
       if closestDistance < maxDistance then
          speedFactor := Float(closestDistance) / Float(maxDistance);
          if speedFactor < minSpeedFactor then
-            speedFactor := minSpeedFactor;
+            return minSpeed;
          elsif speedFactor > maxSpeedFactor then
-            speedFactor := maxSpeedFactor;
+            return maxSpeed;
          end if;
-         motorSpeed := Hal.UInt12(maxSpeed * speedFactor);
+         motorSpeed := Integer(float(maxSpeed) * speedFactor);
       else
-         motorSpeed := Hal.UInt12(maxSpeed);
+         motorSpeed := maxSpeed;
       end if;
-      return motorSpeed;
+
+      if motorSpeed < minSpeed then
+         return minSpeed;
+      else
+         return motorSpeed;
+      end if;
    end calculateMotorSpeed;
 
-   procedure updateMotorDirection(turningDirection : Directions; motorSpeed : Hal.UInt12) is
+   procedure updateMotorDirection(turningDirection : Directions; motorSpeed : Integer) is
    begin
-      MotorDriver_Custom.SetDirection(turningDirection, (motorSpeed, motorSpeed, motorSpeed, motorSpeed));
+      MotorDriver_Custom.SetDirection(turningDirection, (hal.UInt12(motorSpeed), hal.UInt12(motorSpeed), hal.UInt12(motorSpeed), hal.UInt12(motorSpeed)));
    end updateMotorDirection;
 
    procedure moveForward(closestDistance : Distance_cm) is
-      motorSpeed : Hal.UInt12;
+      motorSpeed : Integer;
    begin
       motorSpeed := calculateMotorSpeed(closestDistance);
-      MotorDriver_Custom.SetDirection(Forward, (motorSpeed, motorSpeed, motorSpeed, motorSpeed));
+      MotorDriver_Custom.SetDirection(Forward, (hal.UInt12(motorSpeed), hal.UInt12(motorSpeed), hal.UInt12(motorSpeed), hal.UInt12(motorSpeed)));
    end moveForward;
 
    procedure readSensorValues(leftDistance : out Distance_cm; rightDistance : out Distance_cm) is
@@ -80,7 +85,7 @@ package body TaskThink is
       turningDirection := whichSensor(leftDistance, rightDistance, minDistance);
 
       if checkDistance(leftDistance, rightDistance, minDistance) then
-         updateMotorDirection(turningDirection, Hal.UInt12(maxSpeed));
+         updateMotorDirection(turningDirection, maxSpeed);
       else
          closestDistance := min(leftDistance, rightDistance);
          moveForward(closestDistance);
