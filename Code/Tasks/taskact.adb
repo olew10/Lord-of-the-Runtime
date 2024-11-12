@@ -54,10 +54,11 @@ package body taskAct is
    end setDrive;
 
    task body act is
-   myClock : Time := Clock;
+   myClock : Time;
    begin
       setup;
       loop
+         myClock := Clock;
          if profilerMode then
             profiler.timer("Act", 100, deadline, coreAct'Access);
          else

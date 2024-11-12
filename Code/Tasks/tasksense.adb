@@ -9,15 +9,16 @@ with Config; use Config;
 
 package body TaskSense is
 
-    leftSensorBuffer : Distance_Buffer := (others => 0);
-    rightSensorBuffer : Distance_Buffer := (others => 0);
+    leftSensorBuffer : distanceBuffer := (others => 0);
+    rightSensorBuffer : distanceBuffer := (others => 0);
     leftIndex : Integer := 1;
     rightIndex : Integer := 1;
 
     task body sense is
-   myClock : Time := Clock;
+   myClock : Time;
     begin
         loop
+        myClock := Clock;
             if profilerMode then
                 Profiler.Timer("Sense", 100, deadline, coreSense'Access);
             else
@@ -27,7 +28,7 @@ package body TaskSense is
         end loop;
     end sense;
 
-    function averageBuffer(Buffer : Distance_Buffer) return Distance_cm is
+    function averageBuffer(Buffer : distanceBuffer) return Distance_cm is
         Sum : Natural := 0;
     begin
         for I in Buffer'Range loop
@@ -36,14 +37,14 @@ package body TaskSense is
         return Distance_cm(Sum / Natural(Buffer'Length));
     end averageBuffer;
 
-    procedure updateBuffer(SensorBuffer : in out Distance_Buffer;
+    procedure updateBuffer(SensorBuffer : in out distanceBuffer;
                            Index : in out Integer;
                            NewDistance : in Distance_cm) is
     begin
         SensorBuffer(Index) := NewDistance;
         Index := Index + 1;
-        if Index > Distance_Buffer'Last then
-            Index := Distance_Buffer'First;
+        if Index > distanceBuffer'Last then
+            Index := distanceBuffer'First;
         end if;
     end UpdateBuffer;
 

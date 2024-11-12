@@ -16,25 +16,22 @@ package TaskThink is
    minSpeedFactor  : constant Float := 0.1;
    maxSpeedFactor  : constant Float := 1.0;
    maxSpeed : constant Integer := 4095;
-   minSpeed : constant Integer := 1024;
+   minSpeed : constant Integer := 2048;
+
+   turnThreshold: constant Distance_cm := 50;
 
    deadline : constant Time_Span := Priorities.thinkDeadline;
-
-   function checkDistance(
-      sensor1  : Distance_cm;
-      sensor2  : Distance_cm;
-      minDist  : Distance_cm
-   ) return Boolean;
 
    function min(
       a        : Distance_cm;
       b        : Distance_cm
    ) return Distance_cm;
 
-   function whichSensor(
-      leftSensor   : Distance_cm;
-      rightSensor  : Distance_cm;
-      minDistance  : Distance_cm
+   function determineDirection(
+      leftDistance   : Distance_cm;
+      rightDistance  : Distance_cm;
+      minThreshold  : Distance_cm;
+      turnThreshold : Distance_cm
    ) return Directions;
 
    function calculateMotorSpeed(
@@ -44,10 +41,6 @@ package TaskThink is
    procedure updateMotorDirection(
       turningDirection : Directions;
       motorSpeed       : Integer
-   );
-
-   procedure moveForward(
-      closestDistance  : Distance_cm
    );
 
    procedure readSensorValues(
