@@ -1,12 +1,12 @@
 with Ada.Real_Time; use Ada.Real_Time;
 package Priorities is
 
-   Sense : constant := 3;
-   senseDeadline : constant Time_Span := Milliseconds(65);
+   Sense : constant := 1;
+   senseDeadline : constant Time_Span := Milliseconds(130);
 
-   Think : constant := 2;
-   thinkDeadline : constant Time_Span := Milliseconds(135);
+   Think : constant := 3;
+   thinkDeadline : constant Time_Span := Milliseconds(10);
 
-   Act : constant := 1;
-   actDeadline : constant Time_Span := Milliseconds(75);
+   Act : constant := 2;
+   actDeadline : constant Time_Span := Milliseconds(40);
 end Priorities;
