@@ -1,4 +1,5 @@
 with MicroBit.Console; use MicroBit.Console;
+with ExceptionHandler; use ExceptionHandler;
 with Profiler;
 with Config; use Config;
 
@@ -85,6 +86,10 @@ end determineDirection;
       rightDistance    : Distance_cm;
       closestDistance  : Distance_cm;
    begin
+      if Handler.isThinkOverride then
+         MotorDriver_Custom.SetDirection(Stop, (0,0,0,0));
+         return;
+      end if;
       readSensorValues(leftDistance, rightDistance);
       turningDirection := determineDirection(leftDistance, rightDistance, minDistance, turnThreshold);
       closestDistance :=   min(leftDistance, rightDistance);

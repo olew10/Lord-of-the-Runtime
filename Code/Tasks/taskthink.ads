@@ -1,5 +1,5 @@
 with MicroBit.Types; use MicroBit.Types;
-with MicroBit.Extended; use MicroBit.Extended;
+with MicroBit.MotorDriverExtended; use MicroBit.MotorDriverExtended;
 with HAL;
 with Ada.Real_Time; use Ada.Real_Time;
 with MyMotorDriver; use MyMotorDriver;

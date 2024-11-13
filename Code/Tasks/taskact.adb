@@ -1,6 +1,8 @@
 with MicroBit.Console; use MicroBit.Console;
-with MicroBit.Extended; use MicroBit.Extended;
 with MicroBit.Types; use MicroBit.Types;
+with MicroBit.DisplayRT;
+with MicroBit.DisplayRT.Symbols;
+with ExceptionHandler; use ExceptionHandler;
 
 with Config; use Config;
 with DFR0548;
@@ -12,6 +14,14 @@ package body taskAct is
    procedure coreAct is
    begin
       setDrive(motorDriver_Custom.getStatus.direction, motorDriver_Custom.getStatus.speed);
+
+      if Handler.getWarningState then
+         put_Line("Warning");
+         MicroBit.DisplayRT.Symbols.Frown;
+      else
+         MicroBit.DisplayRT.Clear;
+      end if;
+
       if debugMode then
          put_Line("Direction is: " & motorDriver_Custom.getStatus.direction'Image);
       end if;

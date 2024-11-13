@@ -1,7 +1,7 @@
 with DFR0548; use DFR0548;
 with HAL;     use HAL;
 
-package MicroBit.Extended is
+package MicroBit.MotorDriverExtended is
 
    type Directions is (Forward,
                        Backward,
@@ -37,4 +37,4 @@ private
 
    procedure Initialize;
 
-end MicroBit.Extended;
+end MicroBit.MotorDriverExtended;

@@ -1,4 +1,4 @@
-with MicroBit.Extended; use MicroBit.Extended;
+with MicroBit.MotorDriverExtended; use MicroBit.MotorDriverExtended;
 with DFR0548;
 with MicroBit.Console; use MicroBit.Console;
 use MicroBit;

@@ -1,6 +1,8 @@
 with Ada.Real_Time; use Ada.Real_Time;
 with MicroBit.Console; use MicroBit.Console;
-with MicroBit.Ultrasonic;
+with MicroBit.UltrasonicExtended;
+with Exceptions;
+with ExceptionHandler; use ExceptionHandler;
 with MicroBit.Types; use MicroBit.Types;
 use MicroBit;
 with Profiler;
@@ -49,15 +51,16 @@ package body TaskSense is
     end UpdateBuffer;
 
     procedure coreSense is
-        package leftSensorPackage is new Ultrasonic(MB_P16, MB_P0);
-        package rightSensorPackage is new Ultrasonic(MB_P15, MB_P1);
+        package leftSensorPackage is new UltrasonicExtended(MB_P16, MB_P0);
+        package rightSensorPackage is new UltrasonicExtended(MB_P15, MB_P1);
 
         leftDistance : Distance_cm := 0;
         rightDistance : Distance_cm := 0;
     begin
-
         leftDistance := leftSensorPackage.Read;
         rightDistance := rightSensorPackage.Read;
+
+        Handler.setErrorState(False);
 
         updateBuffer(leftSensorBuffer, leftIndex, leftDistance);
         updateBuffer(rightSensorBuffer, rightIndex, rightDistance);
@@ -71,6 +74,8 @@ package body TaskSense is
 
         Brain.leftSetMeasurementSensor(averageBuffer(leftSensorBuffer));
         Brain.rightSetMeasurementSensor(averageBuffer(rightSensorBuffer));
+    exception
+      when Exceptions.SensorError =>
+        Handler.setErrorState(True);
     end coreSense;
-
 end TaskSense;

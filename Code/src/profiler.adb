@@ -1,7 +1,7 @@
 with Ada.Real_Time; use Ada.Real_Time;
 with Ada.Execution_Time; use Ada.Execution_Time;
 with MicroBit.Console; use MicroBit.Console;
-with MicroBit.Extended; use MicroBit.Extended;
+with MicroBit.MotorDriverExtended; use MicroBit.MotorDriverExtended;
 with MicroBit.Types; use MicroBit.Types;
 with DFR0548;
 use MicroBit;

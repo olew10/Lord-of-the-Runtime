@@ -1,6 +1,6 @@
-with MyMotorDriver;      use MyMotorDriver;
-with MicroBit.Extended;  use MicroBit.Extended;
-with Ada.Real_Time;      use Ada.Real_Time;
+with MyMotorDriver; use MyMotorDriver;
+with MicroBit.MotorDriverExtended; use MicroBit.MotorDriverExtended;
+with Ada.Real_Time; use Ada.Real_Time;
 with Priorities;
 
 package TaskAct is

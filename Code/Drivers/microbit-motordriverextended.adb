@@ -1,5 +1,5 @@
 with MicroBit.I2C;
-package body MicroBit.Extended is
+package body MicroBit.MotorDriverExtended is
 
 
    MD  : DFR0548.MotorDriver (MicroBit.I2C.ControllerExt);
@@ -102,4 +102,4 @@ package body MicroBit.Extended is
 
 begin
    Initialize;
-end MicroBit.Extended;
+end MicroBit.MotorDriverExtended;
